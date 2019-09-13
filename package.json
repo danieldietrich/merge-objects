@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "name": "@danieldietrich/merge-objects",
+  "version": "0.0.0",
+  "description": "Merges multiple objects into a new object.",
+  "keywords": [
+    "assign",
+    "array",
+    "clone",
+    "concat",
+    "deep",
+    "extend",
+    "merge",
+    "mix",
+    "mixin",
+    "object",
+    "recursive",
+    "typed",
+    "types",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist",
+    "build": "npm run clean && npm run lint  && tsc --project tsconfig.build.json",
+    "lint": "tslint --project tsconfig.json",
+    "prepare": "npm run test && npm run build",
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danieldietrich/merge-objects"
+  },
+  "homepage": "https://github.com/danieldietrich/merge-objects",
+  "bugs": "https://github.com/danieldietrich/merge-objects/issues",
+  "author": {
+    "name": "Daniel Dietrich",
+    "email": "cafebab3@gmail.com",
+    "url": "https://danieldietrich.dev"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.5",
+    "codecov": "^3.5.0",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
+  }
+}
