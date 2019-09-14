@@ -4,8 +4,8 @@ test('Should merge zero objects', () => {
     expect(mergeObjects()).toEqual({});
 });
 
-test('Should merge distinct objects', () => {
-    expect(mergeObjects({a: 1}, {b: 2}, {c: 3})).toEqual({a: 1, b: 2, c: 3});
+test('Should merge distinct objects recursively', () => {
+    expect(mergeObjects({a: {b: 1, c: 2}}, {a: {b: 3, d: 4}})).toEqual({a: {b: 3, c: 2, d: 4}});
 });
 
 test('Should not merge duplicate property with undefined value', () => {
