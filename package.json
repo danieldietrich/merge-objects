@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@danieldietrich/merge-objects",
   "version": "0.0.0",
   "description": "Merges multiple objects into a new object.",
