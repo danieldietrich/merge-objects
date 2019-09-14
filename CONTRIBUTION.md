@@ -12,7 +12,7 @@
 Development:
 
 * Upgrade dependencies: `ncu -u` (might require a `npm i` afterwards)
-* Run tests: `npm run test` (see [coverage/](./coverage/lcov-report/index.ts.html))
+* Run tests: `npm test` (see [coverage/](./coverage/lcov-report/index.ts.html))
 * Build project: `npm run build` (see [dist/](./dist/))
 
 Release (patch, minor or major):
