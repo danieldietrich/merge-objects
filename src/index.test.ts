@@ -5,7 +5,17 @@ test('Should merge zero objects', () => {
 });
 
 test('Should merge distinct objects recursively', () => {
-    expect(mergeObjects({a: {b: 1, c: 2}}, {a: {b: 3, d: 4}})).toEqual({a: {b: 3, c: 2, d: 4}});
+    expect(mergeObjects(
+        {a: {b: 1, c: [1], d: 3}},
+        {a: {b: 2, c: [2]}},
+        {a: {e: 4, f: undefined}},
+    )).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
+});
+
+test('Should remove undefined properties', () => {
+    expect(mergeObjects(
+        {a: undefined, b: [1, undefined, 2], c: {d: undefined}},
+    )).toEqual({b: [1, undefined, 2], c: {}});
 });
 
 test('Should not merge duplicate property with undefined value', () => {

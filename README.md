@@ -25,20 +25,21 @@ The module supports ES6 _import_ and CommonJS _require_ style.
 ```ts
 import mergeObjects from 'merge-objects';
 
-// {a: 1, b: 2, c: 3}
-mergeObjects({a: 1}, {b: 2}, {c: 3});
+// -- 1) merge n objects
 
-// {a: {b: 3, c: 2, d: 4}}
+// {a: {b: 2, c: [1, 2], d: 3, e: 4}}
 mergeObjects(
-    {a: {b: 1, c: 2}},
-    {a: {b: 3, d: 4}}
+    {a: {b: 1, c: [1], d: 3}},
+    {a: {b: 2, c: [2]}},
+    {a: {e: 4, f: undefined}}
 );
 
-// {a: 2}
-mergeObjects({a: [1]}, {a: 2});
+// -- 2) remove undefined properties
 
-// {a: [1, 2]}
-mergeObjects({a: [1]}, {a: [2]});
+// {b: [1, undefined, 2], c: {}}
+mergeObjects(
+    {a: undefined, b: [1, undefined, 2], c: {d: undefined}}
+);
 ```
 
 ---
