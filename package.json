@@ -30,7 +30,7 @@
     "clean": "rm -fr dist",
     "build": "npm run clean && npm run lint  && tsc --project tsconfig.build.json",
     "lint": "tslint --project tsconfig.json",
-    "prepare": "npm run test && npm run build",
+    "prepare": "npm test && npm run build",
     "test": "jest --coverage"
   },
   "repository": {
