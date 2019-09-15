@@ -8,14 +8,6 @@ test('Should merge undefined', () => {
     expect(mergeObjects(undefined)).toEqual({});
 });
 
-test('Should ignore number arguments', () => {
-    expect(mergeObjects(1, 2, 3)).toEqual({});
-});
-
-test('Should ignore array arguments', () => {
-    expect(mergeObjects([1], [2], [3])).toEqual({});
-});
-
 test('Should merge distinct objects recursively', () => {
     expect(mergeObjects(
         {a: {b: 1, c: [1], d: 3}},
@@ -24,11 +16,10 @@ test('Should merge distinct objects recursively', () => {
     )).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
 });
 
-test('Should compose merge calls', () => {
-    expect(mergeObjects(
-        mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}),
-        mergeObjects({b1: 1}, {b2: 2}, {b3: 3}, {b4: 4}),
-    )).toEqual({a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4});
+test('Should merge 8 objects', () => {
+    expect(
+        mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}, {b1: 1}, {b2: 2}, {b3: 3}, {b4: 4}),
+    ).toEqual({a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4});
 });
 
 test('Should coerce key type string when key is number', () => {
