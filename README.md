@@ -12,6 +12,14 @@ Merges multiple objects into a new object.
 
 Compared to _Object.assign()_ or _{...obj1, ...obj2}_, values are not assigned as a whole. Instead, properties that don't hold the value _undefined_ are recursively merged. The difference to Lodash's __.merge_ or jQuery's deep _extend_ is that arrays are concatenated.
 
+Features:
+
+* Fail-safe: allows null and undefined objects
+* Concatenates arrays []
+* Recursively merges objects {}
+* Skips undefined properties
+* Overwrites properties if value is not undefined (including null)
+
 ## Installation
 
 ```bash
