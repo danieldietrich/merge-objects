@@ -14,7 +14,7 @@ Compared to _Object.assign()_ or _{...obj1, ...obj2}_, values are not assigned a
 
 Features:
 
-* Type-safe: statically computes the correct type of the merged object
+* [Type-safe](#type-safety): statically computes the type of the merged object
 * Fail-safe: allows null and undefined objects
 * Concatenates arrays []
 * Recursively merges objects {}
@@ -51,6 +51,73 @@ mergeObjects(
 mergeObjects(
     {a: undefined, b: [1, undefined, 2], c: {d: undefined}}
 );
+```
+
+## Type safety
+
+While merge-objects works well with JavaScript, it comes with TypeScript types. The merged object type is inferred by the TypeScript compiler:
+
+```ts
+ /*
+    const o: {
+        0: number;
+        a: number;
+        b: number[];
+        c: number[];
+        f: () => void;
+        d: never;
+    } | {
+        0: number;
+        a: string;
+        b: number[];
+        c: string[];
+        f: (arg: number) => true;
+        d: never;
+    }
+    */
+    const o = mergeObjects(
+        {0: 1, a: 1, b: [1], c: [1], f: () => {}},
+        {0: 2, a: "2", b: [2], c: ["2"], f: (arg: number) => true},
+        {d: undefined},
+        null,
+        undefined,
+    );
+```
+
+✅ When objects have similar field types, undefined properties or we try to access non-existent fields, we walk on the sunny path.
+
+```ts
+// const first: number
+const first = o[0];
+
+// const b: number[]
+const b = o.b;
+
+// const d: never
+const d = o.d;
+
+// compiler error "Property 'e' does not exist on type '...'."
+const e = o.e;
+```
+
+✴️ When objects have different types, the compiler infers the union. Currently, we can't infer the merged type.
+
+```ts
+// const a: string | number;
+// but really: string
+const a = o.a;
+
+// const f: (() => void) | ((arg: number) => true);
+// but really: f: ((arg: number) => true)
+const f = o.f;
+```
+
+🆘 The compiler is currently not able to be convinced that arrays with different element types are concatenated.
+
+```ts
+// const c: number[] | string [];
+// but really: Array<number | string>
+const c = o.c;
 ```
 
 ---
