@@ -12,6 +12,15 @@ test('Should merge distinct objects recursively', () => {
     )).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
 });
 
+test('Should coerce key types', () => {
+    expect(mergeObjects({1: "a"})).toEqual({1: "a"});
+});
+
+test('Should allow function properties', () => {
+    const f = () => {};
+    expect(mergeObjects({f})).toEqual({f});
+});
+
 test('Should remove undefined properties', () => {
     expect(mergeObjects(
         {a: undefined, b: [1, undefined, 2], c: {d: undefined}},

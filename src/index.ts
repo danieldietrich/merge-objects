@@ -56,7 +56,8 @@ type JSONValue =
     | null
     | undefined
     | JSONObject
-    | JSONArray;
+    | JSONArray
+    | Function; // tslint:disable-line ban-types
 
 interface JSONObject {
     [key: string]: JSONValue;
