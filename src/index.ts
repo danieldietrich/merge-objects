@@ -1,16 +1,16 @@
-type Obj = Record<string, unknown>;
-
 /**
  * Merges multiple objects into a new object.
  *
  * @param objects a sequence of objects
  * @returns a new object
  */
-export = function mergeObjects<T extends Obj | null | undefined>(...objects: T[]): NonNullable<T> {
+export = function mergeObjects<T1, T2, T3, T4>(t1?: T1, t2?: T2, t3?: T3, t4?: T4): {} & T1 & T2 & T3 & T4 {
 
-    return objects.reduce(merge, {}) as NonNullable<T>;
+    return ([t1, t2, t3, t4]
+        .filter(t => isObject(t)) as Obj[])
+        .reduce(merge, {}) as {} & T1 & T2 & T3 & T4;
 
-    function merge(target: Obj, source: Obj | null | undefined): Obj {
+    function merge(target: Obj, source?: Obj): Obj {
         if (source) {
             for (const [key, value2] of Object.entries(source)) {
                 if (value2 !== undefined) {
@@ -34,3 +34,5 @@ export = function mergeObjects<T extends Obj | null | undefined>(...objects: T[]
         return value instanceof Object && value.constructor === Object;
     }
 };
+
+type Obj = Record<string | number | symbol, unknown>;

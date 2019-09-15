@@ -4,6 +4,18 @@ test('Should merge zero objects', () => {
     expect(mergeObjects()).toEqual({});
 });
 
+test('Should merge undefined', () => {
+    expect(mergeObjects(undefined)).toEqual({});
+});
+
+test('Should ignore number arguments', () => {
+    expect(mergeObjects(1, 2, 3)).toEqual({});
+});
+
+test('Should ignore array arguments', () => {
+    expect(mergeObjects([1], [2], [3])).toEqual({});
+});
+
 test('Should merge distinct objects recursively', () => {
     expect(mergeObjects(
         {a: {b: 1, c: [1], d: 3}},
@@ -12,7 +24,14 @@ test('Should merge distinct objects recursively', () => {
     )).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
 });
 
-test('Should coerce key types', () => {
+test('Should compose merge calls', () => {
+    expect(mergeObjects(
+        mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}),
+        mergeObjects({b1: 1}, {b2: 2}, {b3: 3}, {b4: 4}),
+    )).toEqual({a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4});
+});
+
+test('Should coerce key type string when key is number', () => {
     expect(mergeObjects({1: "a"})).toEqual({1: "a"});
 });
 
@@ -33,7 +52,7 @@ test('Should overwrite with null', () => {
 
 test('Should merge null and undefined objects', () => {
     expect(mergeObjects(
-        {a: 1}, null, undefined, {b: 2},
+        {a: 1}, undefined, {b: 2},
     )).toEqual({a: 1, b: 2});
 });
 
@@ -79,4 +98,23 @@ test('Should overwrite existing property if source is array and target is null',
 
 test('Should overwrite existing property if source is null and target is array', () => {
     expect(mergeObjects({a: [2]}, {a: null}, {c: 3})).toEqual({a: null, c: 3});
+});
+
+test('Should infer {} with zero arguments', () => {
+    const o: {} = mergeObjects();
+    expect(typeof o).toBe("object");
+});
+
+test('Should infer intersection of arguments', () => {
+    type T = {a?: string, b: number};
+    type U = {c?: string, d: number};
+    function f(t?: T, u?: U) {
+        const o = mergeObjects({a: "A"}, t, u);
+        const a: string = o.a;
+        const b: number = o.b;
+        const c: string | undefined = o.c;
+        const d: number = o.d;
+        expect(a + b + c + d).toBe("Aundefinedundefinedundefined");
+    }
+    f();
 });
