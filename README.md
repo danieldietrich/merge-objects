@@ -14,6 +14,7 @@ Compared to _Object.assign()_ or _{...obj1, ...obj2}_, values are not assigned a
 
 Features:
 
+* Type-safe: statically computes the correct type of the merged object
 * Fail-safe: allows null and undefined objects
 * Concatenates arrays []
 * Recursively merges objects {}
