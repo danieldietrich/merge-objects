@@ -8,7 +8,7 @@ test('Should merge distinct objects recursively', () => {
     expect(mergeObjects(
         {a: {b: 1, c: [1], d: 3}},
         {a: {b: 2, c: [2]}},
-        {a: {e: 4, f: undefined}},
+        {a: {b: undefined, e: 4}},
     )).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
 });
 
@@ -16,6 +16,10 @@ test('Should remove undefined properties', () => {
     expect(mergeObjects(
         {a: undefined, b: [1, undefined, 2], c: {d: undefined}},
     )).toEqual({b: [1, undefined, 2], c: {}});
+});
+
+test('Should overwrite with null', () => {
+    expect(mergeObjects({a: 1}, {a: null})).toEqual({a: null});
 });
 
 test('Should not merge duplicate property with undefined value', () => {
