@@ -53,13 +53,6 @@ mergeObjects([1], [2], [3])
 mergeObjects(
     {a: undefined, b: [1, undefined, 2], c: {d: undefined}}
 );
-
-// -- compose to merge more than 4 objects
-// {a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4}
-mergeObjects(
-    mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}),
-    mergeObjects({b1: 1}, {b2: 2}, {b3: 3}, {b4: 4}),
-);
 ```
 
 ## Type safety

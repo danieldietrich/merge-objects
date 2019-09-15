@@ -4,11 +4,9 @@
  * @param objects a sequence of objects
  * @returns a new object
  */
-export = function mergeObjects<T1, T2, T3, T4>(t1?: T1, t2?: T2, t3?: T3, t4?: T4): {} & T1 & T2 & T3 & T4 {
+export = function mergeObjects<T extends Array<Obj | undefined>>(...objects: T): {} & Intersection<T> {
 
-    return ([t1, t2, t3, t4]
-        .filter(t => isObject(t)) as Obj[])
-        .reduce(merge, {}) as {} & T1 & T2 & T3 & T4;
+    return objects.reduce(merge, {}) as {} & Intersection<T>;
 
     function merge(target: Obj, source?: Obj): Obj {
         if (source) {
@@ -36,3 +34,14 @@ export = function mergeObjects<T1, T2, T3, T4>(t1?: T1, t2?: T2, t3?: T3, t4?: T
 };
 
 type Obj = Record<string | number | symbol, unknown>;
+
+// TODO: see also https://github.com/Microsoft/TypeScript/pull/21316#issuecomment-359574388
+
+// see https://stackoverflow.com/a/51604379/1110815
+type Intersection<T extends unknown[]> = UnboxIntersection<UnionToIntersection<BoxedTupleTypes<T>>>;
+
+// boxing/unboxing tuples helps to distinguish between single-parameters-which-are-unions and the union of multiple parameters
+// and prevents union types from being turned into intersection types
+type BoxedTupleTypes<T extends unknown[]> = { [P in keyof T]: [T[P]] }[Exclude<keyof T, keyof unknown[]>];
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
+type UnboxIntersection<T> = T extends { 0: infer U } ? U : never;
