@@ -58,30 +58,27 @@ mergeObjects(
 While merge-objects works well with JavaScript, it comes with TypeScript types. The merged object type is inferred by the TypeScript compiler:
 
 ```ts
- /*
-    const o: {
-        0: number;
-        a: number;
-        b: number[];
-        c: number[];
-        f: () => void;
-        d: never;
-    } | {
-        0: number;
-        a: string;
-        b: number[];
-        c: string[];
-        f: (arg: number) => true;
-        d: never;
-    }
-    */
-    const o = mergeObjects(
-        {0: 1, a: 1, b: [1], c: [1], f: () => {}},
-        {0: 2, a: "2", b: [2], c: ["2"], f: (arg: number) => true},
-        {d: undefined},
-        null,
-        undefined,
-    );
+/*
+const o: {
+    0: number;
+    a: number;
+    b: number[];
+    c: number[];
+    f: () => void;
+} | {
+    0: number;
+    a: string;
+    b: number[];
+    c: string[];
+    f: (arg: number) => true;
+}
+*/
+const o = mergeObjects(
+    {0: 1, a: 1,   b: [1], c: [1],   f: () => {}},
+    {0: 2, a: "2", b: [2], c: ["2"], f: (arg: number) => true},
+    null,
+    undefined,
+);
 ```
 
 ✅ When objects have similar field types, undefined properties or we try to access non-existent fields, we walk on the sunny path.
@@ -93,11 +90,8 @@ const first = o[0];
 // const b: number[]
 const b = o.b;
 
-// const d: never
-const d = o.d;
-
-// compiler error "Property 'e' does not exist on type '...'."
-const e = o.e;
+// compiler error "Property 'x' does not exist on type '...'."
+const x = o.x;
 ```
 
 ✴️ When objects have different types, the compiler infers the union. Currently, we can't infer the merged type.

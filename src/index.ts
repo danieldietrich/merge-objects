@@ -1,14 +1,16 @@
+type Obj = Record<string, unknown>;
+
 /**
  * Merges multiple objects into a new object.
  *
  * @param objects a sequence of objects
  * @returns a new object
  */
-export = function mergeObjects<T extends Obj>(...objects: T[]): Merged<T> {
+export = function mergeObjects<T extends Obj | null | undefined>(...objects: T[]): NonNullable<T> {
 
-    return objects.reduce(merge, {}) as Merged<T>;
+    return objects.reduce(merge, {}) as NonNullable<T>;
 
-    function merge(target: Record<string, unknown>, source: Record<string, unknown> | null | undefined): Record<string, unknown> {
+    function merge(target: Obj, source: Obj | null | undefined): Obj {
         if (source) {
             for (const [key, value2] of Object.entries(source)) {
                 if (value2 !== undefined) {
@@ -28,39 +30,7 @@ export = function mergeObjects<T extends Obj>(...objects: T[]): Merged<T> {
         return target;
     }
 
-    function isObject(value: unknown): value is Record<string, unknown> {
+    function isObject(value: unknown): value is Obj {
         return value instanceof Object && value.constructor === Object;
     }
 };
-
-// Type of input objects
-type Obj = JSONObject | null | undefined;
-
-// Output type = merged inputs
-type Merged<T extends Obj> = NoUndefinedField<NonNullable<T>>;
-
-// Removes fields with undefined values
-type NoUndefinedField<T> =
-    T extends JSONArray ? T :
-    T extends JSONObject ? { [P in keyof T]-?: NoUndefinedField<NotUndefined<T[P]>> } :
-    T;
-
-// Does not permit undefined
-type NotUndefined<T> = T extends undefined ? never : T;
-
-// A recursive JSON definition, permitsundefined
-type JSONValue =
-    | string
-    | number
-    | boolean
-    | null
-    | undefined
-    | JSONObject
-    | JSONArray
-    | Function; // tslint:disable-line ban-types
-
-interface JSONObject {
-    [key: string]: JSONValue;
-}
-
-interface JSONArray extends Array<JSONValue> { }
