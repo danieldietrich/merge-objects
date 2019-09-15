@@ -4,9 +4,9 @@
  * @param objects a sequence of objects
  * @returns a new object
  */
-export = function mergeObjects(...objects: Array<Record<string, unknown> | null | undefined>): Record<string, unknown> {
+export = function mergeObjects<T extends Obj>(...objects: T[]): Merged<T> {
 
-    return objects.reduce(merge, {});
+    return objects.reduce(merge, {}) as Merged<T>;
 
     function merge(target: Record<string, unknown>, source: Record<string, unknown> | null | undefined): Record<string, unknown> {
         if (source) {
@@ -32,3 +32,34 @@ export = function mergeObjects(...objects: Array<Record<string, unknown> | null 
         return value instanceof Object && value.constructor === Object;
     }
 };
+
+// Type of input objects
+type Obj = JSONObject | null | undefined;
+
+// Output type = merged inputs
+type Merged<T extends Obj> = NoUndefinedField<NonNullable<T>>;
+
+// Removes fields with undefined values
+type NoUndefinedField<T> =
+    T extends JSONArray ? T :
+    T extends JSONObject ? { [P in keyof T]-?: NoUndefinedField<NotUndefined<T[P]>> } :
+    T;
+
+// Does not permit undefined
+type NotUndefined<T> = T extends undefined ? never : T;
+
+// A recursive JSON definition, permitsundefined
+type JSONValue =
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | JSONObject
+    | JSONArray;
+
+interface JSONObject {
+    [key: string]: JSONValue;
+}
+
+interface JSONArray extends Array<JSONValue> { }
