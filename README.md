@@ -31,7 +31,7 @@ import mergeObjects from 'merge-objects';
 mergeObjects(
     {a: {b: 1, c: [1], d: 3}},
     {a: {b: 2, c: [2]}},
-    {a: {e: 4, f: undefined}}
+    {a: {b: undefined, e: 4}}
 );
 
 // -- 2) remove undefined properties
