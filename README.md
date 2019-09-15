@@ -31,6 +31,8 @@ import mergeObjects from 'merge-objects';
 mergeObjects(
     {a: {b: 1, c: [1], d: 3}},
     {a: {b: 2, c: [2]}},
+    null,
+    undefined,
     {a: {b: undefined, e: 4}}
 );
 
