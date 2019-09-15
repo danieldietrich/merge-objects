@@ -10,16 +10,17 @@
 
 Merges multiple objects into a new object.
 
-Compared to _Object.assign()_ or _{...obj1, ...obj2}_, values are not assigned as a whole. Instead, properties that don't hold the value _undefined_ are recursively merged. The difference to Lodash's __.merge_ or jQuery's deep _extend_ is that arrays are concatenated.
+Compared to _Object.assign()_ or object spreads _{...obj1, ...obj2}_, values are not assigned as a whole. Instead, properties that don't hold the value _undefined_ are recursively merged. The difference to Lodash's __.merge_ or jQuery's _deep extend_ is that arrays are concatenated.
 
 Features:
 
-* [Type-safe](#type-safety): statically computes the type of the merged object
-* Fail-safe: allows null and undefined objects
+* Type-safe: computes intersection of input arguments
+* Fail-safe: allows any input type but only merges objects
 * Concatenates arrays []
 * Recursively merges objects {}
 * Skips undefined properties
-* Overwrites properties if value is not undefined (including null)
+* Overwrites properties if value is not undefined
+* Merges up to 4 objects, composes for more.
 
 ## Installation
 
@@ -34,22 +35,30 @@ The module supports ES6 _import_ and CommonJS _require_ style.
 ```ts
 import mergeObjects from 'merge-objects';
 
-// -- 1) merge n objects
-
+// -- merge n objects
 // {a: {b: 2, c: [1, 2], d: 3, e: 4}}
 mergeObjects(
     {a: {b: 1, c: [1], d: 3}},
     {a: {b: 2, c: [2]}},
-    null,
     undefined,
     {a: {b: undefined, e: 4}}
 );
 
-// -- 2) remove undefined properties
+// -- array args are ingnored, use arr.concat instead
+// {}
+mergeObjects([1], [2], [3])
 
+// -- remove undefined properties
 // {b: [1, undefined, 2], c: {}}
 mergeObjects(
     {a: undefined, b: [1, undefined, 2], c: {d: undefined}}
+);
+
+// -- compose to merge more than 4 objects
+// {a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4}
+mergeObjects(
+    mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}),
+    mergeObjects({b1: 1}, {b2: 2}, {b3: 3}, {b4: 4}),
 );
 ```
 
@@ -65,7 +74,7 @@ const o: {
     b: number[];
     c: number[];
     f: () => void;
-} | {
+} & {
     0: number;
     a: string;
     b: number[];
@@ -76,12 +85,11 @@ const o: {
 const o = mergeObjects(
     {0: 1, a: 1,   b: [1], c: [1],   f: () => {}},
     {0: 2, a: "2", b: [2], c: ["2"], f: (arg: number) => true},
-    null,
     undefined,
 );
 ```
 
-✅ When objects have similar field types, undefined properties or we try to access non-existent fields, we walk on the sunny path.
+✅ When objects have similar field types we walk on the sunny path. The compiler infers the union type of the input arguments. The merge result is the intersection of non-nullable input types. This is exactly the way _Object.assign()_ works, see type definitions in [lib.es2015.core.d.ts](https://github.com/microsoft/TypeScript/blob/b963e1a2a7e3b1056ee2552927fa08fcc51e4c7d/lib/lib.es2015.core.d.ts#L305).
 
 ```ts
 // const first: number
@@ -94,25 +102,23 @@ const b = o.b;
 const x = o.x;
 ```
 
-✴️ When objects have different types, the compiler infers the union. Currently, we can't infer the merged type.
+✴️ If object fields have orthogonal types, the intersection type results in the type _never_. Functions are an exception, here we get different overloads. However, these might not reflect the actual field type at runtime.
 
 ```ts
-// const a: string | number;
-// but really: string
+// computed type: string & number, eff. never;
+// actual type: string
 const a = o.a;
 
-// const f: (() => void) | ((arg: number) => true);
-// but really: f: ((arg: number) => true)
+// computed type: number[] & string[], eff. never[]
+// actual type: Array<number | string>
+const c = o.c;
+
+// computed type: (() => void) & ((arg: number) => true)
+// actual type: ((arg: number) => true)
 const f = o.f;
 ```
 
-🆘 The compiler is currently not able to be convinced that arrays with different element types are concatenated.
-
-```ts
-// const c: number[] | string [];
-// but really: Array<number | string>
-const c = o.c;
-```
+Bottom line: thou shalt not merge incompatible objects.
 
 ---
 
