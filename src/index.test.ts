@@ -22,6 +22,12 @@ test('Should overwrite with null', () => {
     expect(mergeObjects({a: 1}, {a: null})).toEqual({a: null});
 });
 
+test('Should merge null and undefined objects', () => {
+    expect(mergeObjects(
+        {a: 1}, null, undefined, {b: 2},
+    )).toEqual({a: 1, b: 2});
+});
+
 test('Should not merge duplicate property with undefined value', () => {
     expect(mergeObjects({a: 1}, {a: undefined}, {c: 3})).toEqual({a: 1, c: 3});
 });
