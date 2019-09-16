@@ -35,8 +35,6 @@ export = function mergeObjects<T extends Array<Obj | undefined>>(...objects: T):
 
 type Obj = Record<string | number | symbol, unknown>;
 
-// TODO: see also https://github.com/Microsoft/TypeScript/pull/21316#issuecomment-359574388
-
 // see https://stackoverflow.com/a/51604379/1110815
 type Intersection<T extends unknown[]> = UnboxIntersection<UnionToIntersection<BoxedTupleTypes<T>>>;
 

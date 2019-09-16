@@ -1,94 +1,232 @@
 import mergeObjects from '.';
 
 test('Should merge zero objects', () => {
-    expect(mergeObjects()).toEqual({});
+    const o: never = mergeObjects();
+    expect(o).toEqual({});
 });
 
 test('Should merge undefined', () => {
-    expect(mergeObjects(undefined)).toEqual({});
+    const o: never = mergeObjects(undefined);
+    expect(o).toEqual({});
 });
 
 test('Should merge distinct objects recursively', () => {
-    expect(mergeObjects(
+    const o: {
+        a: {
+            b: number;
+            c: number[];
+            d: number;
+        };
+    } & {
+        a: {
+            b: number;
+            c: number[];
+        };
+    } & {
+        a: {
+            b: undefined;
+            e: number;
+        };
+    } = mergeObjects(
         {a: {b: 1, c: [1], d: 3}},
         {a: {b: 2, c: [2]}},
         {a: {b: undefined, e: 4}},
-    )).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
+    );
+    expect(o).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
 });
 
 test('Should merge 8 objects', () => {
-    expect(
-        mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}, {b1: 1}, {b2: 2}, {b3: 3}, {b4: 4}),
-    ).toEqual({a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4});
+    const o: {
+        a1: number;
+    } & {
+        a2: number;
+    } & {
+        a3: number;
+    } & {
+        a4: number;
+    } & {
+        b1: number;
+    } & {
+        b2: number;
+    } & {
+        b3: number;
+    } & {
+        b4: number;
+    } = mergeObjects({a1: 1}, {a2: 2}, {a3: 3}, {a4: 4}, {b1: 1}, {b2: 2}, {b3: 3}, {b4: 4});
+    expect(o).toEqual({a1: 1, a2: 2, a3: 3, a4: 4, b1: 1, b2: 2, b3: 3, b4: 4});
 });
 
 test('Should coerce key type string when key is number', () => {
-    expect(mergeObjects({1: "a"})).toEqual({1: "a"});
+    const o: {
+        1: string;
+    } = mergeObjects({1: "a"});
+    expect(o).toEqual({1: "a"});
 });
 
 test('Should allow function properties', () => {
     const f = () => {};
-    expect(mergeObjects({f})).toEqual({f});
+    const o: {
+        f: () => void;
+    } = mergeObjects({f});
+    expect(o).toEqual({f});
 });
 
 test('Should remove undefined properties', () => {
-    expect(mergeObjects(
+    const o: {
+        a: undefined;
+        b: Array<number | undefined>;
+        c: {
+            d: undefined;
+        };
+    } = mergeObjects(
         {a: undefined, b: [1, undefined, 2], c: {d: undefined}},
-    )).toEqual({b: [1, undefined, 2], c: {}});
+    );
+    expect(o).toEqual({b: [1, undefined, 2], c: {}});
 });
 
 test('Should overwrite with null', () => {
-    expect(mergeObjects({a: 1}, {a: null})).toEqual({a: null});
+    const o: {
+        a: number;
+    } & {
+        a: null;
+    } = mergeObjects({a: 1}, {a: null});
+    expect(o).toEqual({a: null});
 });
 
 test('Should merge null and undefined objects', () => {
-    expect(mergeObjects(
+    const o: never = mergeObjects(
         {a: 1}, undefined, {b: 2},
-    )).toEqual({a: 1, b: 2});
+    );
+    expect(o).toEqual({a: 1, b: 2});
 });
 
 test('Should not merge duplicate property with undefined value', () => {
-    expect(mergeObjects({a: 1}, {a: undefined}, {c: 3})).toEqual({a: 1, c: 3});
+    const o: {
+        a: number;
+    } & {
+        a: undefined;
+    } & {
+        c: number;
+    } = mergeObjects({a: 1}, {a: undefined}, {c: 3});
+    expect(o).toEqual({a: 1, c: 3});
 });
 
 test('Should not merge non-existing property with undefined value', () => {
-    expect(mergeObjects({a: 1}, {b: undefined}, {c: 3})).toEqual({a: 1, c: 3});
+    const o: {
+        a: number;
+    } & {
+        b: undefined;
+    } & {
+        c: number;
+    } = mergeObjects({a: 1}, {b: undefined}, {c: 3});
+    expect(o).toEqual({a: 1, c: 3});
 });
 
 test('Should overwrite existing property if values have same type', () => {
-    expect(mergeObjects({a: 1}, {a: 2}, {c: 3})).toEqual({a: 2, c: 3});
+    const o: {
+        a: number;
+    } & {
+        a: number;
+    } & {
+        c: number;
+    } = mergeObjects({a: 1}, {a: 2}, {c: 3});
+    expect(o).toEqual({a: 2, c: 3});
 });
 
 test('Should concatenate arrays', () => {
-    expect(mergeObjects({a: [1]}, {a: [2]}, {c: 3})).toEqual({a: [1, 2], c: 3});
+    const o: {
+        a: number[];
+    } & {
+        a: number[];
+    } & {
+        c: number;
+    } = mergeObjects({a: [1]}, {a: [2]}, {c: 3});
+    expect(o).toEqual({a: [1, 2], c: 3});
 });
 
 test('Should not merge objects within arrays', () => {
-    expect(mergeObjects({0: [{a: 1}]}, {0: [{a: 2}]}, {c: 3})).toEqual({0: [{a: 1}, {a: 2}], c: 3});
+    const o: {
+        0: Array<{a: number}>,
+    } & {
+        0: Array<{a: number}>,
+    } & {
+        c: number;
+    } = mergeObjects({0: [{a: 1}]}, {0: [{a: 2}]}, {c: 3});
+    expect(o).toEqual({0: [{a: 1}, {a: 2}], c: 3});
 });
 
 test('Should overwrite existing property if source is array and target is object', () => {
-    expect(mergeObjects({a: {0: '0'}}, {a: [2]}, {c: 3})).toEqual({a: [2], c: 3});
+    const o: {
+        a: {
+            0: string;
+        };
+    } & {
+        a: number[];
+    } & {
+        c: number;
+    } = mergeObjects({a: {0: '0'}}, {a: [2]}, {c: 3});
+    expect(o).toEqual({a: [2], c: 3});
 });
 
 test('Should overwrite existing property if source is object and target is array', () => {
-    expect(mergeObjects({a: [2]}, {a: {0: '0'}}, {c: 3})).toEqual({a: {0: '0'}, c: 3});
+    const o: {
+        a: number[];
+    } & {
+        a: {
+            0: string;
+        };
+    } & {
+        c: number;
+    } = mergeObjects({a: [2]}, {a: {0: '0'}}, {c: 3});
+    expect(o).toEqual({a: {0: '0'}, c: 3});
 });
 
 test('Should overwrite existing property if source is null and target is object', () => {
-    expect(mergeObjects({a: {0: '0'}}, {a: null}, {c: 3})).toEqual({a: null, c: 3});
+    const o: {
+        a: {
+            0: string;
+        };
+    } & {
+        a: null;
+    } & {
+        c: number;
+    } = mergeObjects({a: {0: '0'}}, {a: null}, {c: 3});
+    expect(o).toEqual({a: null, c: 3});
 });
 
 test('Should overwrite existing property if source is object and target is null', () => {
-    expect(mergeObjects({a: null}, {a: {0: '0'}}, {c: 3})).toEqual({a: {0: '0'}, c: 3});
+    const o: {
+        a: null;
+    } & {
+        a: {
+            0: string;
+        };
+    } & {
+        c: number;
+    } = mergeObjects({a: null}, {a: {0: '0'}}, {c: 3});
+    expect(o).toEqual({a: {0: '0'}, c: 3});
 });
 
 test('Should overwrite existing property if source is array and target is null', () => {
-    expect(mergeObjects({a: null}, {a: [2]}, {c: 3})).toEqual({a: [2], c: 3});
+    const o: {
+        a: null;
+    } & {
+        a: number[];
+    } & {
+        c: number;
+    } = mergeObjects({a: null}, {a: [2]}, {c: 3});
+    expect(o).toEqual({a: [2], c: 3});
 });
 
 test('Should overwrite existing property if source is null and target is array', () => {
-    expect(mergeObjects({a: [2]}, {a: null}, {c: 3})).toEqual({a: null, c: 3});
+    const o: {
+        a: number[];
+    } & {
+        a: null;
+    } & {
+        c: number;
+    } = mergeObjects({a: [2]}, {a: null}, {c: 3});
+    expect(o).toEqual({a: null, c: 3});
 });
 
 test('Should infer {} with zero arguments', () => {
@@ -100,7 +238,8 @@ test('Should infer intersection of arguments', () => {
     type T = {a?: string, b: number};
     type U = {c?: string, d: number};
     function f(t?: T, u?: U) {
-        const o = mergeObjects({a: "A"}, t, u);
+        // type is the same as typeof Object.assign({a: "A"}, t, u)
+        const o: {a: string} & T & U = mergeObjects({a: "A"}, t, u);
         const a: string = o.a;
         const b: number = o.b;
         const c: string | undefined = o.c;
