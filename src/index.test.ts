@@ -10,31 +10,6 @@ test('Should merge undefined', () => {
     expect(o).toEqual({});
 });
 
-test('Should merge distinct objects recursively', () => {
-    const o: {
-        a: {
-            b: number;
-            c: number[];
-            d: number;
-        };
-    } & {
-        a: {
-            b: number;
-            c: number[];
-        };
-    } & {
-        a: {
-            b: undefined;
-            e: number;
-        };
-    } = mergeObjects(
-        {a: {b: 1, c: [1], d: 3}},
-        {a: {b: 2, c: [2]}},
-        {a: {b: undefined, e: 4}},
-    );
-    expect(o).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
-});
-
 test('Should merge 8 objects', () => {
     const o: {
         a1: number;
@@ -247,4 +222,52 @@ test('Should infer intersection of arguments', () => {
         expect(a + b + c + d).toBe("Aundefinedundefinedundefined");
     }
     f();
+});
+
+test('Should merge complex README.md example', () => {
+    const o: {
+        a: {
+            b: number;
+            c: number[];
+            d: number;
+        };
+    } & {
+        a: {
+            b: number;
+            c: number[];
+        };
+    } & {
+        a: {
+            b: undefined;
+            e: number;
+        };
+    } = mergeObjects(
+        {a: {b: 1, c: [1], d: 3}},
+        {a: {b: 2, c: [2]}},
+        {} || undefined,
+        {a: {b: undefined, e: 4}},
+    );
+    expect(o).toEqual({a: {b: 2, c: [1, 2], d: 3, e: 4}});
+});
+
+test('Should merge type-safety README.md example', () => {
+    const f: (arg: number) => true = (arg: number) => true;
+    const o: {
+        0: number;
+        a: number;
+        b: number[];
+        c: number[];
+        f: () => void;
+    } & {
+        0: number;
+        a: string;
+        b: number[];
+        c: string[];
+        f: (arg: number) => true;
+    } = mergeObjects(
+        {0: 1, a: 1,   b: [1], c: [1],   f: () => {}},
+        {0: 2, a: "2", b: [2], c: ["2"], f},
+        {} || undefined,
+    );
+    expect(o).toEqual({0: 2, a: "2", b: [1, 2], c: [1, "2"], f});
 });
