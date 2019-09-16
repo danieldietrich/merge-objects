@@ -16,6 +16,7 @@ Features:
 
 * Type-safe: computes intersection of input arguments
 * Fail-safe: allows any input type but only merges objects
+* Immutable: creates a new object instead of assigning to the first argument
 * Concatenates arrays []
 * Recursively merges objects {}
 * Skips undefined properties
@@ -36,20 +37,16 @@ The module supports ES6 _import_ and CommonJS _require_ style.
 import mergeObjects from 'merge-objects';
 
 // -- merge n objects
-// {a: {b: 2, c: [1, 2], d: 3, e: 4}}
+// = {a: {b: 2, c: [1, 2], d: 3, e: 4}}
 mergeObjects(
     {a: {b: 1, c: [1], d: 3}},
     {a: {b: 2, c: [2]}},
-    undefined,
+    {} || undefined,
     {a: {b: undefined, e: 4}}
 );
 
-// -- array args are ingnored, use arr.concat instead
-// {}
-mergeObjects([1], [2], [3])
-
 // -- remove undefined properties
-// {b: [1, undefined, 2], c: {}}
+// = {b: [1, undefined, 2], c: {}}
 mergeObjects(
     {a: undefined, b: [1, undefined, 2], c: {d: undefined}}
 );
@@ -78,7 +75,7 @@ const o: {
 const o = mergeObjects(
     {0: 1, a: 1,   b: [1], c: [1],   f: () => {}},
     {0: 2, a: "2", b: [2], c: ["2"], f: (arg: number) => true},
-    undefined,
+    {} || undefined,
 );
 ```
 
