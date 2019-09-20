@@ -34,7 +34,7 @@ npm i @danieldietrich/merge-objects
 The module supports ES6 _import_ and CommonJS _require_ style.
 
 ```ts
-import mergeObjects from 'merge-objects';
+import mergeObjects from '@danieldietrich/merge-objects';
 
 // -- merge n objects
 // = {a: {b: 2, c: [1, 2], d: 3, e: 4}}
