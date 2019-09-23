@@ -1,6 +1,6 @@
 {
   "name": "@danieldietrich/merge-objects",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Merges multiple objects into a new object.",
   "keywords": [
     "assign",
