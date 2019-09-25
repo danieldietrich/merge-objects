@@ -2,7 +2,7 @@
 &nbsp;
 [![build](https://img.shields.io/travis/danieldietrich/merge-objects?logo=github&style=flat-square)](https://travis-ci.org/danieldietrich/merge-objects/)[![coverage](https://img.shields.io/codecov/c/github/danieldietrich/merge-objects?style=flat-square)](https://codecov.io/gh/danieldietrich/merge-objects/)
 &nbsp;
-![Platform](https://img.shields.io/badge/platform-Node%20v10%20%20+%20Browser%20%28ES6%2fES2015%29-decc47?logo=TypeScript&style=flat-square)
+![Platform](https://img.shields.io/badge/platform-Node%20v10%20+%20Browser%20%28ES6%2fES2015%29-decc47?logo=TypeScript&style=flat-square)
 &nbsp;
 [![donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal&style=flat-square)](https://paypal.me/danieldietrich13)[![patrons](https://img.shields.io/liberapay/patrons/danieldietrich?style=flat-square)](https://liberapay.com/danieldietrich/)[![license](https://img.shields.io/github/license/danieldietrich/merge-objects?style=flat-square)](https://opensource.org/licenses/MIT/)
 &nbsp;
