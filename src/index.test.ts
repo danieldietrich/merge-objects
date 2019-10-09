@@ -251,7 +251,7 @@ test('Should merge complex README.md example', () => {
 });
 
 test('Should merge type-safety README.md example', () => {
-    const f: (arg: number) => true = (arg: number) => true;
+    const f: (arg: number) => true = () => true;
     const o: {
         0: number;
         a: number;
