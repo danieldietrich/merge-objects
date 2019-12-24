@@ -44,16 +44,17 @@
     "email": "cafebab3@gmail.com",
     "url": "https://danieldietrich.dev"
   },
+  "funding": "https://github.com/sponsors/danieldietrich",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^24.0.22",
-    "@types/node": "^12.12.6",
-    "@typescript-eslint/eslint-plugin": "^2.6.1",
-    "@typescript-eslint/parser": "^2.6.1",
+    "@types/jest": "^24.0.24",
+    "@types/node": "^13.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
     "codecov": "^3.6.1",
-    "eslint": "^6.6.0",
+    "eslint": "^6.8.0",
     "jest": "^24.9.0",
-    "ts-jest": "^24.1.0",
-    "typescript": "^3.7.2"
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.4"
   }
 }
